@@ -62,7 +62,7 @@ describe CodeclimateBatch do
 
     it "calls start when on travis master" do
       with_env(default) do
-        CodeClimate::TestReporter.should_receive(:start)
+        SimpleCov.should_receive(:start)
         CodeclimateBatch.start
         ENV["CODECLIMATE_TO_FILE"].should == "1"
       end
@@ -71,7 +71,7 @@ describe CodeclimateBatch do
     it "starts without travis since we don't know how to handle other cis" do
       default.delete("TRAVIS")
       with_env(default) do
-        CodeClimate::TestReporter.should_receive(:start)
+        SimpleCov.should_receive(:start)
         CodeclimateBatch.start
       end
     end
@@ -79,7 +79,7 @@ describe CodeclimateBatch do
     it "does not start on different branch" do
       default["TRAVIS_BRANCH"] = "mooo"
       with_env(default) do
-        CodeClimate::TestReporter.should_not_receive(:start)
+        SimpleCov.should_not_receive(:start)
         CodeclimateBatch.start
       end
     end
@@ -87,7 +87,7 @@ describe CodeclimateBatch do
     it "starts on different branch if set as default branch" do
       default.merge! "TRAVIS_BRANCH" => "moooo", "DEFAULT_BRANCH" => "moooo"
       with_env(default) do
-        CodeClimate::TestReporter.should_receive(:start)
+        SimpleCov.should_receive(:start)
         CodeclimateBatch.start
       end
     end
@@ -95,7 +95,7 @@ describe CodeclimateBatch do
     it "does not starts on different branch if it doesn't match default branch" do
       default.merge! "TRAVIS_BRANCH" => "moooo", "DEFAULT_BRANCH" => "monster"
       with_env(default) do
-        CodeClimate::TestReporter.should_not_receive(:start)
+        SimpleCov.should_not_receive(:start)
         CodeclimateBatch.start
       end
     end
@@ -103,7 +103,7 @@ describe CodeclimateBatch do
     it "starts on PR" do
       default["TRAVIS_PULL_REQUEST"] = "123"
       with_env(default) do
-        CodeClimate::TestReporter.should_receive(:start)
+        SimpleCov.should_receive(:start)
         CodeclimateBatch.start
       end
     end
